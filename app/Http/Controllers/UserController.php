@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\UserLogin;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -14,45 +15,28 @@ class UserController extends Controller
     {
         try {
             $request->validate([
-                'first_name' => ['required', 'string', 'max:255'],
-                'last_name' => ['required', 'string', 'max:255'],
+                'name' => ['required', 'string', 'max:255'],
                 'phone_number' => ['required', 'string', 'max:255'],
                 'email' => ['required',  'max:255', 'email'],
-                'role' => ['required', 'string', 'max:255'],
-                'username' => ['required', 'string', 'max:255'],
                 'password' => ['required', 'string', 'max:255'],
+                'role' => ['required', 'string', 'max:255'],
+                'have_sub_account' => ['string', 'max:255'],
+                'parent_id' => ['integer']
 
             ]);
             $user = new User;
-            $user->first_name = $request->first_name;
-            $user->last_name = $request->last_name;
+            $user->name = $request->name;
             $user->phone_number = $request->phone_number;
             $user->email = $request->email;
+            $user->password = Hash::make($request->password);
             $user->role = $request->role;
+            $user->have_sub_account = $request->have_sub_account;
+            $user->parent_id = $request->parent_id;
             $user->save();
-            $userID = $user->id;
 
-            $userLogin = new UserLogin;
-            $userLogin->username = $request->username;
-            $userLogin->password = Hash::make($request->password);
-            $userLogin->user_id = $userID;
-            $userLogin->save();
-
-            $dataUser = User::with(['user_login'])->get();
-            foreach ($dataUser as $a) {
-
-                $dataToSend[] = array(
-                    'id' => $a->id,
-                    'first_name' => $a->first_name,
-                    'last_name' => $a->last_name,
-                    'phone_number' => $a->phone_number,
-                    'email' => $a->email,
-                    'role' => $a->role,
-                    'username' => $a->user_login['username']
-                );
-            }
+            $dataUser = User::all();
             $response = [
-                'user' => $dataToSend,
+                'user' => $dataUser,
                 'message' => 'Data Loaded!'
             ];
             return response()->json($response, 200);
@@ -60,9 +44,34 @@ class UserController extends Controller
             return response()->json($th, 500);
         }
     }
+    public function login(Request $request)
+    {
+        try {
+
+            $credential = $request->validate([
+                'email' => ['required', 'string'],
+                'password' => ['required', 'string']
+            ]);
+
+            if (!Auth::attempt($credential)) {
+                $data = ['message' => 'Authentication failed'];
+                return response()->json($data, 500);
+            }
+            $user = User::where('email', $request->email)->first();
+            $token = $user->createToken('app_token')->plainTextToken;
+            $data = [
+                'user' => $user,
+                'token' => $token,
+                'message' => 'Authenticated'
+            ];
+            return response()->json($data, 200);
+        } catch (\Throwable $th) {
+            return response()->json($th, 500);
+        }
+    }
     public function getUser()
     {
-        $user = User::with(['user_login'])->get();
+        $user = User::all();
         return response()->json($user, 200);
     }
 }
