@@ -74,4 +74,12 @@ class UserController extends Controller
         $user = User::all();
         return response()->json($user, 200);
     }
+    public function logout(Request $request)
+    {
+        auth()->user()->tokens()->delete();
+        $data = [
+            'message' => 'You are logged out, see you next time'
+        ];
+        return response()->json($data, 200);
+    }
 }
