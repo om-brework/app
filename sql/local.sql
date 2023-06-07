@@ -119,7 +119,7 @@ CREATE TABLE `locations` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -128,6 +128,11 @@ CREATE TABLE `locations` (
 
 LOCK TABLES `locations` WRITE;
 /*!40000 ALTER TABLE `locations` DISABLE KEYS */;
+INSERT INTO `locations` VALUES (1,'location 1','bdasdjbasjh',NULL,NULL);
+INSERT INTO `locations` VALUES (2,'location 2','',NULL,NULL);
+INSERT INTO `locations` VALUES (3,'location 3','',NULL,NULL);
+INSERT INTO `locations` VALUES (4,'location 4','',NULL,NULL);
+INSERT INTO `locations` VALUES (5,'location 5','',NULL,NULL);
 /*!40000 ALTER TABLE `locations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -143,7 +148,7 @@ CREATE TABLE `migrations` (
   `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -156,12 +161,11 @@ INSERT INTO `migrations` VALUES (1,'2014_10_12_000000_create_users_table',1);
 INSERT INTO `migrations` VALUES (2,'2014_10_12_100000_create_password_resets_table',1);
 INSERT INTO `migrations` VALUES (3,'2019_08_19_000000_create_failed_jobs_table',1);
 INSERT INTO `migrations` VALUES (4,'2019_12_14_000001_create_personal_access_tokens_table',1);
-INSERT INTO `migrations` VALUES (5,'2023_03_25_004622_create_user_logins_table',1);
-INSERT INTO `migrations` VALUES (6,'2023_03_25_030410_create_date_ranges_table',1);
-INSERT INTO `migrations` VALUES (7,'2023_03_25_030445_create_programmes_table',1);
-INSERT INTO `migrations` VALUES (8,'2023_03_25_030510_create_locations_table',1);
-INSERT INTO `migrations` VALUES (9,'2023_03_25_030511_create_groups_table',2);
-INSERT INTO `migrations` VALUES (10,'2023_03_25_030537_create_sessions_table',2);
+INSERT INTO `migrations` VALUES (5,'2023_03_25_030410_create_date_ranges_table',1);
+INSERT INTO `migrations` VALUES (6,'2023_03_25_030445_create_programmes_table',1);
+INSERT INTO `migrations` VALUES (7,'2023_03_25_030510_create_locations_table',1);
+INSERT INTO `migrations` VALUES (8,'2023_03_25_030511_create_groups_table',1);
+INSERT INTO `migrations` VALUES (9,'2023_03_25_030537_create_sessions_table',1);
 /*!40000 ALTER TABLE `migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -209,7 +213,7 @@ CREATE TABLE `personal_access_tokens` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `personal_access_tokens_token_unique` (`token`),
   KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -218,6 +222,8 @@ CREATE TABLE `personal_access_tokens` (
 
 LOCK TABLES `personal_access_tokens` WRITE;
 /*!40000 ALTER TABLE `personal_access_tokens` DISABLE KEYS */;
+INSERT INTO `personal_access_tokens` VALUES (31,'App\\Models\\User',2,'app_token','16190c04d3af5db37e814613ec8edcdd0e6766a0909c3e6cf49f20afbfec0ab8','[\"*\"]',NULL,'2023-04-04 21:05:31','2023-04-04 21:05:31');
+INSERT INTO `personal_access_tokens` VALUES (32,'App\\Models\\User',2,'app_token','9bcfff6d9b433a8b1aa297c818cefdb789dabc47318d86245e5671ffe59c028f','[\"*\"]','2023-04-06 19:15:32','2023-04-04 22:37:04','2023-04-06 19:15:32');
 /*!40000 ALTER TABLE `personal_access_tokens` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -282,35 +288,6 @@ LOCK TABLES `sessions` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `user_logins`
---
-
-DROP TABLE IF EXISTS `user_logins`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
-CREATE TABLE `user_logins` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `username` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `user_id` bigint(20) unsigned NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `user_logins_user_id_foreign` (`user_id`),
-  CONSTRAINT `user_logins_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `user_logins`
---
-
-LOCK TABLES `user_logins` WRITE;
-/*!40000 ALTER TABLE `user_logins` DISABLE KEYS */;
-/*!40000 ALTER TABLE `user_logins` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `users`
 --
 
@@ -319,17 +296,19 @@ DROP TABLE IF EXISTS `users`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `users` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `first_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `last_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `phone_number` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `role` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `role` enum('admin','parent','student','teacher') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `have_sub_account` enum('true','false') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `parent_id` int(11) NOT NULL,
   `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `users_email_unique` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -338,6 +317,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (2,'Admin','12345678','admin8@admin.co.hk','$2y$10$vLj95HVjAmheAaEZfwU0luRIyzEznLiVuEBBasMuMVuvu5WpEXehu','admin','false',0,NULL,'2023-03-30 17:48:54','2023-03-30 17:48:54');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -350,4 +330,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-03-25 17:51:53
+-- Dump completed on 2023-04-08 10:07:39
